@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Transactions;
 using System.Xml.Linq;
 
 namespace MinsaitToDDL.Lib
@@ -23,10 +24,31 @@ namespace MinsaitToDDL.Lib
             };
         }
 
-        public ItemTransaction Parse(string xml)
+        public ItemTransaction Parse(string xml, Enums.Enums.DocumentType documentType)
         {
             var doc = XDocument.Parse(xml);
             var root = doc.Root;
+
+            switch (documentType)
+            {
+                case Enums.Enums.DocumentType.INVOICE:
+                    var invoiceParser = _parsers.OfType<MinsaitInvoiceParser>().FirstOrDefault();
+                    if (invoiceParser != null)
+                    {
+                        return invoiceParser.Parse(xml);
+                    }
+                    break;
+                case Enums.Enums.DocumentType.ORDER:
+                    var orderParser = _parsers.OfType<MinsaitOrderParser>().FirstOrDefault();
+                    if (orderParser != null)
+                    {
+                        return orderParser.Parse(xml);
+                    }
+                    break;
+                // Adicione outros casos conforme necessário
+                default:
+                    throw new InvalidOperationException("Unsupported document type: " + documentType);
+            }
 
             var parser = _parsers.FirstOrDefault(p => p.CanParse(root));
 

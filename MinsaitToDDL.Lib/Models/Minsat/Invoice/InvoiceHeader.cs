@@ -41,6 +41,6 @@ namespace MinsaitToDDL.Lib.Models.Minsait.Invoice
         //public Party DeliveryPlaceInformation { get; set; }
 
         [XmlElement("BillToPartyInformation")]
-        public Party BillToPartyInformation { get; set; }
+        public Common.Party BillToPartyInformation { get; set; }
     }
 }

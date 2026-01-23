@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace MinsatToDDL.Lib.Models.Minsait.Order
+namespace MinsaitToDDL.Lib.Models.Minsait.Order
 {
     [XmlRoot("Order")]
     public class Order

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MinsaitToDDL.Lib.Interfaces;
 using MinsaitToDDL.Lib.Models;
-using MinsatToDDL.Lib.Models.Minsait.Order;
+using MinsaitToDDL.Lib.Models.Minsait.Order;
 using System;
 using System.Collections.Generic;
 using System.IO;

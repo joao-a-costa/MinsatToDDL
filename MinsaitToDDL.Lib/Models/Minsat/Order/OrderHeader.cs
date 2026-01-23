@@ -3,7 +3,7 @@ using MinsaitToDDL.Lib.Models.Minsait.Order;
 using System;
 using System.Xml.Serialization;
 
-namespace MinsatToDDL.Lib.Models.Minsait.Order
+namespace MinsaitToDDL.Lib.Models.Minsait.Order
 {
     public class OrderHeader
     {
@@ -32,15 +32,15 @@ namespace MinsatToDDL.Lib.Models.Minsait.Order
         public HeaderTaxes HeaderTaxes { get; set; }
 
         [XmlElement("BuyerInformation")]
-        public Party BuyerInformation { get; set; }
+        public Common.Party BuyerInformation { get; set; }
 
         [XmlElement("SellerInformation")]
-        public Party SellerInformation { get; set; }
+        public Common.Party SellerInformation { get; set; }
 
         [XmlElement("DeliveryPlaceInformation")]
-        public Party DeliveryPlaceInformation { get; set; }
+        public Common.Party DeliveryPlaceInformation { get; set; }
 
         [XmlElement("BillToPartyInformation")]
-        public Party BillToPartyInformation { get; set; }
+        public Common.Party BillToPartyInformation { get; set; }
     }
 }

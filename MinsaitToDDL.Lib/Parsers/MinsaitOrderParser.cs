@@ -2,6 +2,7 @@
 using MinsaitToDDL.Lib.Interfaces;
 using MinsaitToDDL.Lib.Models;
 using MinsatToDDL.Lib.Models.Minsat.Order;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
@@ -48,21 +49,43 @@ namespace MinsaitToDDL.Lib.Parsers
         {
             var config = new MapperConfiguration(cfg =>
             {
+                // Order → ItemTransaction
                 cfg.CreateMap<Order, ItemTransaction>()
                     .ForMember(d => d.CreateDate,
                         o => o.MapFrom(s => s.OrderHeader.OrderDate))
+                    .ForMember(d => d.ActualDeliveryDate,
+                        o => o.MapFrom(s => s.OrderHeader.OtherOrderDates != null ? s.OrderHeader.OtherOrderDates.DeliveryDate : (DateTime?)null))
                     .ForMember(d => d.ISignableTransactionTransactionID,
                         o => o.MapFrom(s => s.OrderHeader.OrderNumber))
-                    .ForMember(d => d.TotalAmount,
+                    .ForMember(d => d.TotalGrossAmount,
                         o => o.MapFrom(s => s.OrderSummary.OrderTotals.NetValue))
-                    .ForPath(d => d.Party,
+                    .ForMember(d => d.TotalAmount,
+                        o => o.MapFrom(s => s.OrderSummary.OrderTotals.GrossValue))
+                    .ForMember(d => d.Party,
                         o => o.MapFrom(s => MapParty(s.OrderHeader.BuyerInformation)))
-                    .ForPath(d => d.SupplierParty,
+                    .ForMember(d => d.PartyGLN,
+                    o => o.MapFrom(s => s.OrderHeader != null && s.OrderHeader.BuyerInformation != null
+                        ? s.OrderHeader.BuyerInformation.EANCode
+                        : null))
+                    .ForMember(d => d.SupplierParty,
                         o => o.MapFrom(s => MapParty(s.OrderHeader.SellerInformation)))
-                    .ForPath(d => d.Details,
+                    //.ForMember(d => d.LoadPlaceAddress,
+                    //    o => o.MapFrom(s => MapParty(s.OrderHeader.DeliveryPlaceInformation)))
+                    .ForMember(d => d.Details,
                         o => o.MapFrom(s => MapOrderLines(
                             s.OrderDetail != null ? s.OrderDetail.ItemDetails : null)))
+                    .ForMember(d => d.Taxes,
+                        o => o.MapFrom(s => s.OrderHeader != null
+                            && s.OrderHeader.HeaderTaxes != null
+                            && s.OrderHeader.HeaderTaxes.HeaderTaxesHeader != null
+                            ? s.OrderHeader.HeaderTaxes.HeaderTaxesHeader.ConvertAll(
+                                h => new TaxValue { TaxRate = h.TaxPercent })
+                            : null))
+                    .ForMember(d => d.Payment,
+                        o => o.MapFrom(s => MapPayment(s.OrderHeader)))
                     .ForAllOtherMembers(o => o.Ignore());
+
+                // ItemTransaction → Order (already present)
                 cfg.CreateMap<ItemTransaction, Order>()
                     .ForPath(d => d.OrderHeader.OrderDate,
                         o => o.MapFrom(s => s.CreateDate))
@@ -98,21 +121,21 @@ namespace MinsaitToDDL.Lib.Parsers
                         o => o.MapFrom(s => MapOrderHeaderTaxesReverse(s.Taxes)))
                     .ForPath(d => d.OrderDetail.ItemDetails,
                         o => o.MapFrom(s => MapOrderLinesReverse(s.Details)));
-
             });
 
             return config.CreateMapper();
         }
 
+        #region "Forward"
+
         private static Party MapParty(Models.Minsat.Common.PartyOrder party)
         {
             if (party == null) return null;
 
-            return new Models.Party
+            return new Party
             {
-                //PartyID = party.InternalCode,
                 GLN = party.EANCode,
-                //Department = party.Department
+                // Add other mappings if needed
             };
         }
 
@@ -135,20 +158,27 @@ namespace MinsaitToDDL.Lib.Parsers
                     TotalNetAmount = i.MonetaryAmount
                 };
 
-                //// Guardar info extra sem perder dados
-                //detail.ExtraData = new Dictionary<string, string>();
-
-                //if (i.Price?.PVP != null)
-                //    detail.ExtraData["PVP"] = i.Price.PVP.ToString();
-
-                //if (i.Package?.PackageIdentifier != null)
-                //    detail.ExtraData["PackageIdentifier"] = i.Package.PackageIdentifier;
-
                 list.Add(detail);
             }
 
             return list;
         }
+
+        private static Payment MapPayment(OrderHeader header)
+        {
+            if (header == null || header.PaymentInstructions == null)
+                return new Payment { PaymentDays = 0 };
+
+            int days = 0;
+            int.TryParse(header.PaymentInstructions.PaymentTerm, out days);
+
+            return new Payment
+            {
+                PaymentDays = days
+            };
+        }
+
+        #endregion
 
         #region "Reverse"
 

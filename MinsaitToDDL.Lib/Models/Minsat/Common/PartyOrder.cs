@@ -1,8 +1,8 @@
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
-namespace MinsatToDDL.Lib.Models.Minsat.Order
+namespace MinsaitToDDL.Lib.Models.Minsat.Common
 {
-    public class BuyerInformation
+    public class PartyOrder
     {
         [XmlElement("EANCode")]
         public string EANCode { get; set; }

@@ -4,6 +4,9 @@ namespace MinsatToDDL.Lib.Models.Minsat.Order
 {
     public class OrderSummary
     {
+        [XmlElement("NumberOfLines")]
+        public int NumberOfLines { get; set; }
+
         [XmlElement("OrderTotals")]
         public OrderTotals OrderTotals { get; set; }
     }

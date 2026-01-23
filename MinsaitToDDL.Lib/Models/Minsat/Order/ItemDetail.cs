@@ -4,28 +4,44 @@ namespace MinsatToDDL.Lib.Models.Minsat.Order
 {
     public class ItemDetail
     {
-        [XmlElement("StandardPartNumber")]
+
+        [XmlElement(ElementName = "LineItemNum")]
+        public int LineItemNum { get; set; }
+
+        [XmlElement(ElementName = "StandardPartNumber")]
         public string StandardPartNumber { get; set; }
 
-        [XmlElement("BuyerPartNumber")]
+        [XmlElement(ElementName = "BuyerPartNumber")]
         public string BuyerPartNumber { get; set; }
 
-        [XmlElement("SellerPartNumber")]
+        [XmlElement(ElementName = "SellerPartNumber")]
         public string SellerPartNumber { get; set; }
 
-        [XmlElement("ItemDescriptions")]
+        [XmlElement(ElementName = "ItemDescriptions")]
         public ItemDescriptions ItemDescriptions { get; set; }
 
-        [XmlElement("Quantity")]
+        [XmlElement(ElementName = "Quantity")]
         public Quantity Quantity { get; set; }
 
-        [XmlElement("Price")]
+        [XmlElement(ElementName = "PackSize")]
+        public PackSize PackSize { get; set; }
+
+        [XmlElement(ElementName = "Price")]
         public Price Price { get; set; }
 
-        [XmlElement("MonetaryAmount")]
-        public decimal? MonetaryAmount { get; set; }
+        [XmlElement(ElementName = "MonetaryAmount")]
+        public double MonetaryAmount { get; set; }
 
-        [XmlElement("Package")]
+        [XmlElement(ElementName = "Package")]
         public Package Package { get; set; }
+
+        [XmlElement(ElementName = "LineAllowancesOrCharges")]
+        public object LineAllowancesOrCharges { get; set; }
+
+        [XmlElement(ElementName = "LineTaxes")]
+        public object LineTaxes { get; set; }
+
+        [XmlElement(ElementName = "LineFreeTexts")]
+        public object LineFreeTexts { get; set; }
     }
 }

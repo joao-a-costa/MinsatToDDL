@@ -49,32 +49,32 @@ namespace MinsaitToDDL.Lib.Parsers
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Invoice, ItemTransaction>()
-                .ForMember(d => d.CreateDate,
-                    o => o.MapFrom(s => s.InvoiceHeader.InvoiceDate))
-                .ForMember(d => d.DeferredPaymentDate,
-                    o => o.MapFrom(s =>
-                        s.InvoiceHeader.OtherInvoiceDates != null
-                            ? s.InvoiceHeader.OtherInvoiceDates.InvoiceDueDate
-                            : (DateTime?)null))
-                .ForMember(d => d.ISignableTransactionTransactionID,
-                    o => o.MapFrom(s => s.InvoiceHeader.InvoiceNumber))
-                .ForMember(d => d.TotalAmount,
-                    o => o.MapFrom(s => s.InvoiceSummary.InvoiceTotals.NetValue))
-                .ForMember(d => d.TotalTaxAmount,
-                    o => o.MapFrom(s => s.InvoiceSummary.InvoiceTotals.TotalTaxAmount))
-                .ForMember(d => d.TotalTransactionAmount,
-                    o => o.MapFrom(s => s.InvoiceSummary.InvoiceTotals.TotalAmountPayable))
-                .ForPath(d => d.Party,
-                    o => o.MapFrom(s => MapParty(s.InvoiceHeader.BuyerInformation)))
-                .ForPath(d => d.SupplierParty,
-                    o => o.MapFrom(s => MapParty(s.InvoiceHeader.SellerInformation)))
-                .ForPath(d => d.Details,
-                    o => o.MapFrom(s => MapInvoiceLines(
-                        s.InvoiceDetail != null ? s.InvoiceDetail.Items : null)))
-                .ForPath(d => d.Taxes,
-                    o => o.MapFrom(s => MapSummaryTaxes(
-                        s.InvoiceSummary.SummaryTaxes)))
-                .ForAllOtherMembers(o => o.Ignore());
+                    .ForMember(d => d.CreateDate,
+                        o => o.MapFrom(s => s.InvoiceHeader.InvoiceDate))
+                    .ForMember(d => d.DeferredPaymentDate,
+                        o => o.MapFrom(s =>
+                            s.InvoiceHeader.OtherInvoiceDates != null
+                                ? s.InvoiceHeader.OtherInvoiceDates.InvoiceDueDate
+                                : (DateTime?)null))
+                    .ForMember(d => d.ISignableTransactionTransactionID,
+                        o => o.MapFrom(s => s.InvoiceHeader.InvoiceNumber))
+                    .ForMember(d => d.TotalAmount,
+                        o => o.MapFrom(s => s.InvoiceSummary.InvoiceTotals.NetValue))
+                    .ForMember(d => d.TotalTaxAmount,
+                        o => o.MapFrom(s => s.InvoiceSummary.InvoiceTotals.TotalTaxAmount))
+                    .ForMember(d => d.TotalTransactionAmount,
+                        o => o.MapFrom(s => s.InvoiceSummary.InvoiceTotals.TotalAmountPayable))
+                    .ForPath(d => d.Party,
+                        o => o.MapFrom(s => MapParty(s.InvoiceHeader.BuyerInformation)))
+                    .ForPath(d => d.SupplierParty,
+                        o => o.MapFrom(s => MapParty(s.InvoiceHeader.SellerInformation)))
+                    .ForPath(d => d.Details,
+                        o => o.MapFrom(s => MapInvoiceLines(
+                            s.InvoiceDetail != null ? s.InvoiceDetail.Items : null)))
+                    .ForPath(d => d.Taxes,
+                        o => o.MapFrom(s => MapSummaryTaxes(
+                            s.InvoiceSummary.SummaryTaxes)))
+                    .ForAllOtherMembers(o => o.Ignore());
 
                 cfg.CreateMap<ItemTransaction, Invoice>()
                     .ForAllOtherMembers(o => o.Ignore());

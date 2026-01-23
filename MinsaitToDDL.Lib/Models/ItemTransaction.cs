@@ -215,8 +215,8 @@ namespace MinsaitToDDL.Lib.Models
         [JsonProperty("SecondHandTaxRegimen")]
         public bool? SecondHandTaxRegimen;
 
-        //[JsonProperty("Taxes")]
-        //public List<Taxis>? Taxes;
+        [JsonProperty("Taxes")]
+        public IEnumerable<TaxValue> Taxes { get; set; }
 
         [JsonProperty("Details")]
         public List<Detail> Details;
@@ -658,7 +658,5 @@ namespace MinsaitToDDL.Lib.Models
 
         [JsonProperty("Base64")]
         public string Base64;
-        [JsonProperty("Taxes")]
-        public List<TaxValue> Taxes;
     }
 }

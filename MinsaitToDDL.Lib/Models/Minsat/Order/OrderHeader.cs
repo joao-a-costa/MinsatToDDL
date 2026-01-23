@@ -1,6 +1,7 @@
-﻿using System;
+﻿using MinsaitToDDL.Lib.Models.Minsat.Common;
+using MinsaitToDDL.Lib.Models.Minsat.Order;
+using System;
 using System.Xml.Serialization;
-using MinsaitToDDL.Lib.Models.Minsat.Common;
 
 namespace MinsatToDDL.Lib.Models.Minsat.Order
 {
@@ -12,16 +13,28 @@ namespace MinsatToDDL.Lib.Models.Minsat.Order
         [XmlElement("OrderDate")]
         public DateTime OrderDate { get; set; }
 
+        [XmlElement("DocType")]
+        public string DocType { get; set; } = "221";
+
+        [XmlElement("OrderType")]
+        public string OrderType { get; set; } = "9";
+
         [XmlElement("OrderCurrency")]
-        public string OrderCurrency { get; set; } // <-- Add this
+        public string OrderCurrency { get; set; } = "EUR";
+
+        [XmlElement("OtherOrderDates")]
+        public OtherOrderDates OtherOrderDates { get; set; }
 
         [XmlElement("PaymentInstructions")]
-        public PaymentInstructions PaymentInstructions { get; set; } // <-- Add this
+        public PaymentInstructions PaymentInstructions { get; set; }
+
+        [XmlElement(ElementName = "HeaderTaxes")]
+        public HeaderTaxes HeaderTaxes { get; set; }
 
         [XmlElement("BuyerInformation")]
-        public BuyerInformation BuyerInformation { get; set; } // <-- Change type
+        public PartyOrder BuyerInformation { get; set; }
 
         [XmlElement("SellerInformation")]
-        public SellerInformation SellerInformation { get; set; } // <-- Change type
+        public PartyOrder SellerInformation { get; set; }
     }
 }

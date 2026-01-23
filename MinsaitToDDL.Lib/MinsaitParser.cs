@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MinsaitToDDL.Lib.Interfaces;
+using MinsaitToDDL.Lib.Models;
+using MinsaitToDDL.Lib.Parsers;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using MinsaitToDDL.Lib.Interfaces;
-using MinsaitToDDL.Lib.Models;
-using MinsaitToDDL.Lib.Parsers;
 
 namespace MinsaitToDDL.Lib
 {
@@ -60,6 +61,15 @@ namespace MinsaitToDDL.Lib
             }
 
             return null;
+        }
+
+        public string MapToXmlFromJson(string json, Enums.Enums.DocumentType documentType)
+        {
+            var transaction = JsonConvert.DeserializeObject<ItemTransaction>(json);
+            if (transaction == null)
+                throw new ArgumentException("Invalid JSON for ItemTransaction.", nameof(json));
+
+            return MapToXml(transaction, documentType);
         }
     }
 }

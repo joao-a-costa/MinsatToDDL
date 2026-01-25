@@ -4,8 +4,8 @@
     {
         public enum DocumentType
         {
-            INVOICE = 0,
-            ORDER = 1
+            INVOICE = 1,
+            ORDER = 2
         }
     }
 }
